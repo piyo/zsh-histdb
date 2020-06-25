@@ -213,7 +213,6 @@ histdb () {
     --at      like --in, but excluding subdirectories
     -s n      only show session n
     -d        debug output query that will be run
-    --detail  show details
     --forget  forget everything which matches in the history
     --exact   don't match substrings
     --sep x   print with separator x, and don't tabulate
@@ -221,8 +220,21 @@ histdb () {
     --until x only show commands before date x (sqlite date parser)
     --limit n only show n rows. defaults to $LINES or 25"
 
-    local selcols="session as ses, dir"
-    local cols="session, replace(places.dir, '$HOME', '~') as dir"
+    local selcols
+    local cols
+    # display: duration
+    selcols="COALESCE(duration,'-') as secs"
+    cols="duration"
+    # display: exit status
+    selcols="${selcols}, COALESCE(exit_status,'-') as [?] "
+    cols="${cols}, exit_status "
+    # display: session
+    selcols="${selcols}, session as ses"
+    cols="${cols}, session"
+    # display: dir
+    selcols="${selcols}, dir"
+    cols="${cols}, replace(places.dir, '$HOME', '~') as dir"
+
     local where="1"
     if [[ -p /dev/stdout ]]; then
         local limit=""
@@ -312,10 +324,10 @@ histdb () {
             -d)
                 debug=1
                 ;;
-            --detail)
-                cols="${cols}, exit_status, duration "
-                selcols="${selcols}, COALESCE(exit_status,'-') as [?], COALESCE(duration,'-') as secs "
-                ;;
+            # --detail)
+            #     cols="${cols}, exit_status, duration "
+            #     selcols="${selcols}, COALESCE(exit_status,'-') as [?], COALESCE(duration,'-') as secs "
+            #     ;;
             -h|--help)
                 echo "$usage"
                 return 0
