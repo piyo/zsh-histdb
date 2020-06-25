@@ -314,7 +314,7 @@ histdb () {
                 ;;
             --detail)
                 cols="${cols}, exit_status, duration "
-                selcols="${selcols}, exit_status as [?],duration as secs "
+                selcols="${selcols}, COALESCE(exit_status,'-') as [?], COALESCE(duration,'-') as secs "
                 ;;
             -h|--help)
                 echo "$usage"
