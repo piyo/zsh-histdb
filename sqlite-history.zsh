@@ -361,8 +361,8 @@ from
   join places on history.place_id = places.id
 where ${where}
 group by history.command_id, history.place_id
-order by max_start desc
-${limit:+limit $limit}) order by max_start asc"
+order by max_start desc, history.session desc
+${limit:+limit $limit}) group by time order by max_start asc"
 
     ## min max date?
     local count_query="select count(*) from (select ${cols}
