@@ -110,13 +110,11 @@ $top_bit"
         if [[ $HISTDB_ISEARCH_HOST == $HOST ]]; then
             local host=""
         else
-            local host="
-  host: $HISTDB_ISEARCH_HOST"
+            local host="${HISTDB_ISEARCH_HOST}:"
         fi
         region_highlight=("P${prefix_len} ${match_end} underline")
         PREDISPLAY="${HISTDB_ISEARCH_MATCH}
-→ in ${HISTDB_ISEARCH_DIR}$host
-→ on ${HISTDB_ISEARCH_DATE}
+→ ${HISTDB_ISEARCH_DATE} in $host${HISTDB_ISEARCH_DIR}
 $top_bit"
     fi
 }
